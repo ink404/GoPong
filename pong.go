@@ -1,8 +1,5 @@
 package main
 
-// Experiment! draw some crazy stuff!
-// Gist it next week and I'll show it off on stream
-
 import (
 	"fmt"
 
@@ -59,6 +56,7 @@ func (ball *ball) update(leftPaddle *paddle, rightPaddle *paddle) {
 	ball.x += ball.xv
 	ball.y += ball.yv
 
+	// checking if the ball is within the window
 	if ball.y-ball.radius < 0 || ball.y+ball.radius > winHeight {
 		ball.yv *= -1
 	}
@@ -66,6 +64,7 @@ func (ball *ball) update(leftPaddle *paddle, rightPaddle *paddle) {
 		ball.x, ball.y = 300, 300
 	}
 
+	// checking if the ball and paddle intersect
 	if ball.x < leftPaddle.x+leftPaddle.w/2 {
 		if ball.y > leftPaddle.y-leftPaddle.h/2 && ball.y < leftPaddle.y+leftPaddle.h/2 {
 			ball.xv *= -1
@@ -159,15 +158,17 @@ func main() {
 			}
 		}
 		clear(pixels)
+		
+		// draws
 		player1.draw(pixels)
 		player2.draw(pixels)
+		ball.draw(pixels)
 
+		// updates
 		ball.update(&player1, &player2)
 		player1.update(keyState)
 		player2.aiUpdate(&ball)
-
-		ball.draw(pixels)
-
+		// render updates
 		tex.Update(nil, pixels, winWidth*4)
 		renderer.Copy(tex, nil, nil)
 		renderer.Present()
